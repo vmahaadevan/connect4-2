@@ -1,8 +1,7 @@
 <?php
 class User_model extends CI_Model {
 	
-	function get($username)
-	{
+	function get($username) {
 		$this->db->where('login',$username);
 		$query = $this->db->get('user');
 		if ($query && $query->num_rows() > 0)
@@ -11,8 +10,7 @@ class User_model extends CI_Model {
 			return null;
 	}
 	
-	function getFromId($id)
-	{
+	function getFromId($id) {
 		$this->db->where('id',$id);
 		$query = $this->db->get('user');
 		if ($query && $query->num_rows() > 0)
@@ -21,8 +19,7 @@ class User_model extends CI_Model {
 			return null;
 	}
 	
-	function getFromEmail($email)
-	{
+	function getFromEmail($email) {
 		$this->db->where('email',$email);
 		$query = $this->db->get('user');
 		if ($query && $query->num_rows() > 0)
@@ -66,8 +63,7 @@ class User_model extends CI_Model {
 			return null;
 	}
 	
-	function getExclusive($username)
-	{
+	function getExclusive($username){
 		$sql = "select * from user where login=? for update";
 		$query = $this->db->query($sql,array($username));
 		if ($query && $query->num_rows() > 0)
@@ -75,7 +71,5 @@ class User_model extends CI_Model {
 		else
 			return null;
 	}
-	
-	
 }
 ?>

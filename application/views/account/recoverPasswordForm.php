@@ -1,15 +1,13 @@
-
 <!DOCTYPE html>
-
 <html>
-	<head>
-		<style>
-			input {
-				display: block;
-			}
-		</style>
+<head>
+	<style>
+		input {
+			display: block;
+		}
+	</style>
 
-	</head> 
+</head> 
 <body>  
 	<h1>Recover Password</h1>
 <?php 
@@ -25,6 +23,4 @@
 	echo form_close();
 ?>	
 </body>
-
 </html>
-

@@ -1,13 +1,10 @@
 <?php
-
 class User  {
-
 	const OFFLINE = 1;
 	const AVAILABLE = 2;
 	const WAITING = 3;
 	const INVITED = 4;
 	const PLAYING = 5;
-	
 	
 	public $id;
 	public $login;
@@ -24,7 +21,6 @@ class User  {
 		$this->salt = mt_rand();
 		$this->password = sha1($this->salt . $clearPassword);
 	}
-	
 	
 	// Initializes the password to a random value
 	public function initPassword() {
@@ -43,5 +39,5 @@ class User  {
 	public function fullName() {
 		return $this->first . " " . $this->last;
 	}
-	
 }
+?>

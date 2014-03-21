@@ -11,5 +11,5 @@ class Invite  {
 	public $user2_id;
 	
 	public $invite_status_id = self::PENDING;
-	
 }
+?>

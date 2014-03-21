@@ -10,5 +10,4 @@ class Match  {
 	public $user2_id;
 	
 	public $match_status_id = self::ACTIVE;
-		
 }
