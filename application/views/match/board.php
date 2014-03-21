@@ -8,8 +8,7 @@
 var otherUser = "<?= $otherUser->login ?>";
 var user = "<?= $user->login ?>";
 var status = "<?= $status ?>";
-// keep track of filled cells
-var filled = {};
+
 // make sure these JQuery functions only fire when all DOM objects have loaded
 $(function(){
 	// every 2 seconds, use ajax querying for updates
@@ -43,18 +42,22 @@ $(function(){
 	});
 	// every 500 ms, check whose turn it is and reprint the board if necessary
 	$('#turn').everyTime(500,function(){
+		// grab the game state via ajax
 		var url = "<?= base_url() ?>board/getGameState";
 		$.getJSON(url, function (data,text,jqXHR){
 			if (data && data.status=='success') {
+				// set the turn
 				var turn = data.turn;
 				$('#turn').html(turn);
-				filled= data.filled;
+				// get the filled cells (JSON string)
 				var filled = JSON.parse(data.filled);
+				// populate the filled cells appropriately
 				for (var key in filled) {
 					$("td[id="+key+"]").val(filled[key]);
+					// if it's the player's own cell
 					if (filled[key]==user)
 						$("td[id="+key+"]").html('C');
-					else
+					else // if it's the opponent's cell
 						$("td[id="+key+"]").html('X');
 				}
 			}
@@ -75,8 +78,7 @@ $(function(){
 	$('td').click(function(){
 		// first check to see if it's the user's turn, otherwise exit
 		if ($('#turn').html()!=user)
-			return;
-		
+			return;		
 		// coordinates are the ID tag of the table cell
 		var position = $(this).attr('id');
 		// x-coord is 2nd char, y-coord is 4th char
@@ -91,12 +93,14 @@ $(function(){
 		// fill in the space
 		$("#x"+x+'y'+i).val(user);
 		$("#x"+x+'y'+i).html('C');
-		
+		// keep track of filled cells
+		var filled = {};
 		// convert the board into an array and JSON it to the controller
 		// to save space/time, just get filled cells, not empty ones
 		$("td").each(function(){
-			if ($(this).val()!="") 
+			if ($(this).val()!="") {
 				filled[$(this).attr('id')] = $(this).val();
+			}
 		});
 		// JSON the board and the turn (make it that of other player)
 		var url = "<?= base_url() ?>board/setGameState";

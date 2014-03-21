@@ -144,6 +144,7 @@ class Board extends CI_Controller {
  		// get board state, extract turn status
  		$match = $this->match_model->get($user->match_id);
  		$blob = $match->board_state;
+ 		// convert binary data back to arrays
  		$data = unserialize($blob);
  		echo json_encode(array('status'=>'success','turn'=>$data['turn'],
  							'filled'=>$data['filled']));
