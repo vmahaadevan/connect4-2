@@ -9,6 +9,8 @@
 var otherUser = "<?= $otherUser->login ?>";
 var user = "<?= $user->login ?>";
 var status = "<?= $status ?>";
+var playerPiece = "<img src='<?= base_url() ?>images/green.jpg'>";
+var opponentPiece = "<img src='<?= base_url() ?>images/red.jpg'>";
 // make sure these JQuery functions only fire when all DOM objects have loaded
 $(function(){
 	// every 2 seconds, use ajax querying for updates
@@ -35,10 +37,12 @@ $(function(){
 			if (data && data.status=='success') {
 				var conversation = $("[name='conversation']").val();
 				var msg = data.message;
-				if (msg.length > 0)
+				if (msg.length > 0) {
 					$("[name='conversation']").val(conversation + "\n" + otherUser + ": " + msg);
+					$("[name='conversation']").scrollTop($("[name='conversation']")[0].scrollHeight);
+				}
 			}
-			$("[name='conversation']").scrollTop($("[name='conversation']")[0].scrollHeight);
+			
 		});
 	});
 	// every 500 ms, check whose turn it is and reprint the board if necessary
@@ -60,9 +64,9 @@ $(function(){
 					$("td[id="+key+"]").val(filled[key]);
 					// if it's the player's own cell
 					if (filled[key]==user)
-						$("td[id="+key+"]").html('C'); 
+						$("td[id="+key+"]").html(playerPiece); 
 					else // if it's the opponent's cell
-						$("td[id="+key+"]").html('X');
+						$("td[id="+key+"]").html(opponentPiece);
 				}
 				// see if anyone has won the game
 				var win = data.win;
@@ -90,11 +94,6 @@ $(function(){
 		});
 		return false;
 	});
-	// make chat box always scroll to bottom
-	$("[name='conversation']").change(function() {
-		console.log('shit');
-		$("[name='conversation']").scrollTop($("[name='conversation']")[0].scrollHeight);
-	});
 	// event handler for clicking on the game's board
 	$('td').click(function(){
 		// first check to see if it's the user's turn, otherwise exit
@@ -114,7 +113,7 @@ $(function(){
 		}
 		// fill in the space
 		$("#x"+x+'y'+i).val(user);
-		$("#x"+x+'y'+i).html('C');
+		$("#x"+x+'y'+i).html(playerPiece);
 		
 		// keep track of filled cells
 		var filled = {};
