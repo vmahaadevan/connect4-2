@@ -50,11 +50,14 @@ function checkRow(row, user){
 }
 // starting from northwest neighbour, go southeast
 function checkDiagonalNW(row,col,user){
-	if (row==0 || col==0)
-		return false;
 	var count = 0;
 	var i=row-1;
 	var j=col-1;
+	// if at an edge, then start from the cell itself rather than the neighbour
+	if (row==0 || col==0){
+		i = row;
+		j = col;
+	}
 	while(i<ROWS && j<COLS){
 		if (board[i][j]==user)
 			count++;
@@ -67,11 +70,14 @@ function checkDiagonalNW(row,col,user){
 }
 // starting from southeast neighbour, go northwest
 function checkDiagonalSE(row,col,user){
-	if (row==ROWS-1 || col==COLS-1)
-		return false;
 	var count = 0;
 	var i=row+1;
 	var j=col+1;
+	// if at an edge, then start from the cell itself rather than the neighbour
+	if (row==ROWS-1 || col==COLS-1){
+		i = row;
+		j = col;
+	}
 	while(i>=0 && j>=0){
 		if (board[i][j]==user)
 			count++;
@@ -84,10 +90,13 @@ function checkDiagonalSE(row,col,user){
 }
 // starting from southwest neighbour, go northeast
 function checkDiagonalSW(row,col,user){
-	if (row==ROWS-1 || col==0)
-		return false;
 	var count = 0;
 	var i=row+1, j=col-1;
+	// if at an edge, then start from the cell itself rather than the neighbour
+	if (row==ROWS-1 || col==0){
+		i = row;
+		j = col;
+	}
 	while(i>=0 && j<COLS){
 		if (board[i][j]==user)
 			count++;
@@ -100,10 +109,13 @@ function checkDiagonalSW(row,col,user){
 }
 // starting from northeast neighbour, go southwest
 function checkDiagonalNE(row,col,user){
-	if (row==0 || col==COLS-1)
-		return false;
 	var count = 0;
 	var i=row-1, j=col+1;
+	// if at an edge, then start from the cell itself rather than the neighbour
+	if (row==0 || col==COLS-1){
+		i = row;
+		j = col;
+	}
 	while(i<ROWS && j>=0){
 		if (board[i][j]==user)
 			count++;
