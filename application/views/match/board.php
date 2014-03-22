@@ -3,8 +3,8 @@
 <head>
 <link href="<?echo base_url();?>css/board.css" rel="stylesheet" type="text/css"/>
 <script src="http://code.jquery.com/jquery-latest.js"></script>
-<script src="<?= base_url() ?>/js/jquery.timers.js"></script>
-<script src="<?= base_url() ?>/js/detectWin.js"></script>
+<script src="<?= base_url() ?>js/jquery.timers.js"></script>
+<script src="<?= base_url() ?>js/detectWin.js"></script>
 <script>
 var otherUser = "<?= $otherUser->login ?>";
 var user = "<?= $user->login ?>";
@@ -86,8 +86,8 @@ $(function(){
 			var msg = $('[name=msg]').val();
 			$("[name='conversation']").val(conversation + "\n" + user + ": " + msg);
 			$("input[name='msg']").val('');
+			$("[name='conversation']").scrollTop($("[name='conversation']")[0].scrollHeight);
 		});
-		$("[name='conversation']").scrollTop($("[name='conversation']")[0].scrollHeight);
 		return false;
 	});
 	// make chat box always scroll to bottom
@@ -153,15 +153,11 @@ Hello <?= $user->fullName() ?>  <?= anchor('account/logout','(Logout)') ?>
 ?>
 </div>
 <p>Current turn: <span id='turn'></span></p>
-<?php 
-	echo form_textarea('conversation');
-	
-	echo form_open();
-	echo form_input('msg');
-	echo form_submit('Send','Send');
-	echo form_close();
+<?php
+	echo "<table>\n";
+	echo "<tr><td>";
 	// print out the game board
-	echo "<br>\n<table>\n";
+	echo "<br>\n<table id='game'>\n";
 	for ($i=0;$i<6;$i++){
 		echo "<tr>";
 		for ($j=0;$j<7;$j++){
@@ -170,8 +166,15 @@ Hello <?= $user->fullName() ?>  <?= anchor('account/logout','(Logout)') ?>
 		echo "</tr>\n";
 	}
 	echo "</table>\n";
+	echo "<p align='center'><span id='win'></span></p>";
+	echo "</td><td>";
+	echo form_textarea('conversation');
+	echo form_open();
+	echo form_input('msg');
+	echo form_submit('Send','Send');
+	echo form_close();
+	echo "</td></tr></table>";
 	
 ?>
-<p><span id='win'></span></p>
 </body>
 </html>
