@@ -32,9 +32,8 @@ class Account extends CI_Controller {
 			$clearPassword = $this->input->post('password');
 			 
 			$this->load->model('user_model');
-		
 			$user = $this->user_model->get($login);
-			 
+			// successful login
 			if (isset($user) && $user->comparePassword($clearPassword)) {
 				$_SESSION['user'] = $user;
 				$data['user']=$user;
@@ -42,7 +41,7 @@ class Account extends CI_Controller {
 				$this->user_model->updateStatus($user->id, User::AVAILABLE);
 				//redirect to the main application page
 				redirect('arcade/index', 'refresh'); 
-			} else {   			
+			} else { // bad username or password	
 				$data['errorMsg']='Incorrect username or password!';
 				$this->load->view('account/loginForm',$data);
 			}
@@ -61,15 +60,32 @@ class Account extends CI_Controller {
     function newForm() {
     	$this->load->view('account/newForm');
     }
-    
+    // load securimage library and provide a link to views for images
+    function securimage(){
+    	$this->load->library('securimage/securimage');
+		$img = new Securimage();
+		$img->show();
+	}
+	// callback function to verify securimage captcha code
+	function verifyCaptcha($captcha){
+		$this->load->library('securimage/securimage');
+		$securimage = new Securimage();
+		if ($securimage->check($captcha)==false){
+			$this->form_validation->set_message('verifyCaptcha', 
+				'Verification code does not match the displayed image');
+			return false;
+		}
+		return true;
+	}
     function createNew() {
 		$this->load->library('form_validation');
 	    $this->form_validation->set_rules('username', 'Username', 'required|is_unique[user.login]');
     	$this->form_validation->set_rules('password', 'Password', 'required');
-    	$this->form_validation->set_rules('first', 'First', "required");
-    	$this->form_validation->set_rules('last', 'last', "required");
+    	$this->form_validation->set_rules('first', 'First Name', "required");
+    	$this->form_validation->set_rules('last', 'Last Name', "required");
     	$this->form_validation->set_rules('email', 'Email', "required|is_unique[user.email]");
-    
+    	$this->form_validation->set_rules('captcha_code','Captcha',"required|callback_verifyCaptcha");
+    	
     	if ($this->form_validation->run() == FALSE) {
     		$this->load->view('account/newForm');
     	}
