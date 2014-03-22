@@ -147,12 +147,12 @@ class Board extends CI_Controller {
  		// convert binary data back to arrays
  		$data = unserialize($blob);
  		echo json_encode(array('status'=>'success','turn'=>$data['turn'],
- 							'filled'=>$data['filled']));
+ 							'filled'=>$data['filled'],'win'=>$data['win']));
 		return;
  		error:
 			echo json_encode(array('status'=>'failure','message'=>$errormsg));
 	}
-	// Set the turn
+	// Set the game state (turn, which cells are filled)
 	function setGameState(){
 		$this->load->model('user_model');
  		$this->load->model('match_model');
@@ -169,13 +169,22 @@ class Board extends CI_Controller {
  		// grab the turn and the filled cells from POST
  		$turn = $this->input->post('turn');
  		$filled = $this->input->post('filled');
+ 		$win = $this->input->post('win');
  		if ($turn=="") { // If the POST-ed json didn't have a username set
  			$errormsg="Missing username";
  			goto error;
  		}
  		$data['turn'] = $turn;
  		$data['filled'] = $filled;
+ 		$data['win'] = $win;
  		$this->match_model->updateBoardState($user->match_id,$data);
+ 		// if one player won the game, record that in the database
+ 		if ($win==$user->login) {
+ 			if ($match->user1_id == $user->id)
+ 				$this->match_model->updateStatus($user->match_id,2);
+ 			else
+ 				$this->match_model->updateStatus($user->match_id,3);
+ 		}
  		if ($this->db->trans_status() === FALSE) {
  			$errormsg = "Transaction error";
  			goto transactionerror;
@@ -183,7 +192,7 @@ class Board extends CI_Controller {
  		// if all went well commit changes
  		$this->db->trans_commit();
  		echo json_encode(array('status'=>'success','turn'=>$turn,
- 							'filled'=>$filled));
+ 							'filled'=>$filled,'win'=>$win));
 		return;
 		transactionerror:
 			$this->db->trans_rollback();

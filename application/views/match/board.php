@@ -4,11 +4,11 @@
 <link href="<?echo base_url();?>css/board.css" rel="stylesheet" type="text/css"/>
 <script src="http://code.jquery.com/jquery-latest.js"></script>
 <script src="<?= base_url() ?>/js/jquery.timers.js"></script>
+<script src="<?= base_url() ?>/js/detectWin.js"></script>
 <script>
 var otherUser = "<?= $otherUser->login ?>";
 var user = "<?= $user->login ?>";
 var status = "<?= $status ?>";
-
 // make sure these JQuery functions only fire when all DOM objects have loaded
 $(function(){
 	// every 2 seconds, use ajax querying for updates
@@ -41,7 +41,7 @@ $(function(){
 		});
 	});
 	// every 500 ms, check whose turn it is and reprint the board if necessary
-	$('#turn').everyTime(500,function(){
+	$('#turn').everyTime(500,'updater',function(){
 		// grab the game state via ajax
 		var url = "<?= base_url() ?>board/getGameState";
 		$.getJSON(url, function (data,text,jqXHR){
@@ -56,9 +56,19 @@ $(function(){
 					$("td[id="+key+"]").val(filled[key]);
 					// if it's the player's own cell
 					if (filled[key]==user)
-						$("td[id="+key+"]").html('C');
+						$("td[id="+key+"]").html('C'); 
 					else // if it's the opponent's cell
 						$("td[id="+key+"]").html('X');
+				}
+				// see if anyone has won the game
+				var win = data.win;
+				// if so, stop updating the board
+				if (win==user || win==otherUser){ 
+					$('#turn').stopTime('updater');
+					if (win==user)
+						$('#win').html("You win");
+					else if (win==otherUser)
+						$('#win').html("You lose");
 				}
 			}
 		});
@@ -77,7 +87,8 @@ $(function(){
 	// event handler for clicking on the game's board
 	$('td').click(function(){
 		// first check to see if it's the user's turn, otherwise exit
-		if ($('#turn').html()!=user)
+		// also if someone won the game, exit
+		if ($('#turn').html()!=user || $('#win').html()=="You win" || $('#win').html()=="You lose")
 			return;		
 		// coordinates are the ID tag of the table cell
 		var position = $(this).attr('id');
@@ -93,6 +104,7 @@ $(function(){
 		// fill in the space
 		$("#x"+x+'y'+i).val(user);
 		$("#x"+x+'y'+i).html('C');
+		
 		// keep track of filled cells
 		var filled = {};
 		// convert the board into an array and JSON it to the controller
@@ -102,10 +114,15 @@ $(function(){
 				filled[$(this).attr('id')] = $(this).val();
 			}
 		});
+		// see if this current move happens to be a winning move
+		var win = "";
+		if (checkWin(parseInt(i),parseInt(x),user,filled)){
+			win = user;
+		}
 		// JSON the board and the turn (make it that of other player)
 		var url = "<?= base_url() ?>board/setGameState";
 		var tmp = JSON.stringify(filled);
-		var arguments = {"turn":otherUser, "filled":tmp};
+		var arguments = {"turn":otherUser, "filled":tmp, "win":win};
 		$.post(url,arguments);
 	});
 });
@@ -144,5 +161,6 @@ Hello <?= $user->fullName() ?>  <?= anchor('account/logout','(Logout)') ?>
 	echo "</table>\n";
 	
 ?>
+<p><span id='win'></span></p>
 </body>
 </html>
