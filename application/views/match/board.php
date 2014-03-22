@@ -53,10 +53,13 @@ $(function(){
 			if (data && data.status=='success') {
 				// set the turn
 				var turn = data.turn;
-				$('#turn').html(turn);
+				if (turn==user)
+					$('#turn').html("You");
 				// if it's the opponent's turn, set the font colour to red
-				if (turn==otherUser)
+				if (turn==otherUser) {
+					$('#turn').html("Opponent");
 					$('#turn').css('color','red');
+				}
 				// get the filled cells (JSON string)
 				var filled = JSON.parse(data.filled);
 				// populate the filled cells appropriately
@@ -77,6 +80,9 @@ $(function(){
 						$('#win').html("You win");
 					else if (win==otherUser)
 						$('#win').html("You lose");
+				} else if (win=="tie"){
+					$('#turn').stopTime('updater');
+					$('#win').html("Draw");
 				}
 			}
 		});
@@ -98,7 +104,7 @@ $(function(){
 	$('td').click(function(){
 		// first check to see if it's the user's turn, otherwise exit
 		// also if someone won the game, exit
-		if ($('#turn').html()!=user || $('#win').html()=="You win" || $('#win').html()=="You lose")
+		if ($('#turn').html()!="You" || $('#win').html()=="You win" || $('#win').html()=="You lose")
 			return;		
 		// coordinates are the ID tag of the table cell
 		var position = $(this).attr('id');
@@ -117,10 +123,12 @@ $(function(){
 		
 		// keep track of filled cells
 		var filled = {};
+		var numFilled = 0;
 		// convert the board into an array and JSON it to the controller
 		// to save space/time, just get filled cells, not empty ones
 		$("td").each(function(){
 			if ($(this).val()!="") {
+				numFilled++;
 				filled[$(this).attr('id')] = $(this).val();
 			}
 		});
@@ -128,6 +136,8 @@ $(function(){
 		var win = "";
 		if (checkWin(parseInt(i),parseInt(x),user,filled)){
 			win = user;
+		} else if (numFilled==42){
+			win = "tie";
 		}
 		// JSON the board and the turn (make it that of other player)
 		var url = "<?= base_url() ?>board/setGameState";
@@ -146,7 +156,7 @@ Hello <?= $user->fullName() ?>  <?= anchor('account/logout','(Logout)') ?>
 <div id='status'> 
 <?php 
 	if ($status == "playing")
-		echo "Playing " . $otherUser->login;
+		echo "Your opponent: " . $otherUser->login;
 	else
 		echo "Wating on " . $otherUser->login;
 ?>
@@ -173,7 +183,7 @@ Hello <?= $user->fullName() ?>  <?= anchor('account/logout','(Logout)') ?>
 	echo form_submit('Send','Send');
 	echo form_close();
 	echo "</td></tr></table>";
-	
+	echo anchor("arcade", "Back to game lobby");
 ?>
 </body>
 </html>

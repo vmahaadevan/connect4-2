@@ -77,6 +77,7 @@ class Account extends CI_Controller {
 		}
 		return true;
 	}
+	// new user registration function
     function createNew() {
 		$this->load->library('form_validation');
 	    $this->form_validation->set_rules('username', 'Username', 'required|is_unique[user.login]');
@@ -163,8 +164,8 @@ class Account extends CI_Controller {
     			$config['smtp_host']    = 'ssl://smtp.gmail.com';
     			$config['smtp_port']    = '465';
     			$config['smtp_timeout'] = '7';
-    			$config['smtp_user']    = 'your gmail user name';
-    			$config['smtp_pass']    = 'your gmail password';
+    			$config['smtp_user']    = '2014csc309';
+    			$config['smtp_pass']    = 'engineer2014';
     			$config['charset']    = 'utf-8';
     			$config['newline']    = "\r\n";
     			$config['mailtype'] = 'text'; // or html

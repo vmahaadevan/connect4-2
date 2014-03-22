@@ -21,6 +21,9 @@ class Arcade extends CI_Controller {
     		$data['errmsg']=$_SESSION['errmsg'];
     		unset($_SESSION['errmsg']);
     	}
+    	$this->load->model('user_model');
+    	$user = $this->user_model->get($data['user']->login);
+    	$this->user_model->updateStatus($user->id,User::AVAILABLE);
     	$this->load->view('arcade/mainPage',$data);
     }
 

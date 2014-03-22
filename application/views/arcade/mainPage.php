@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-
 <script src="http://code.jquery.com/jquery-latest.js"></script>
 <script src="<?= base_url() ?>/js/jquery.timers.js"></script>
 <script>
@@ -16,7 +15,7 @@ $(function(){
 					$.getJSON('<?= base_url() ?>arcade/acceptInvitation',
 						function(data, text, jqZHR){
 							if (data && data.status == 'success')
-								window.location.href = '<?= base_url() ?>board/index'
+								window.location.href = '<?= base_url() ?>board/index';
 						});
 				} else  
 					$.post("<?= base_url() ?>arcade/declineInvitation");

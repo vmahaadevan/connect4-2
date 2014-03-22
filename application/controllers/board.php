@@ -184,6 +184,9 @@ class Board extends CI_Controller {
  				$this->match_model->updateStatus($user->match_id,2);
  			else
  				$this->match_model->updateStatus($user->match_id,3);
+ 		} 
+ 		else if ($win=="tie"){ // if the match ties, record that too
+ 			$this->match_model->updateStatus($user->match_id,4);
  		}
  		if ($this->db->trans_status() === FALSE) {
  			$errormsg = "Transaction error";
