@@ -32,6 +32,8 @@ function checkColumn(col, user) {
 	for (var i=0; i<ROWS; i++){
 		if (board[i][col]==user)
 			count++;
+		else if (count>0)
+			break;
 	}
 	return (count>=4);
 }
@@ -41,6 +43,8 @@ function checkRow(row, user){
 	for (var j=0; j<COLS; j++){
 		if (board[row][j]==user)
 			count++;
+		else if (count>0)
+			break;
 	}
 	return (count>=4);
 }
@@ -54,6 +58,8 @@ function checkDiagonalNW(row,col,user){
 	while(i<ROWS && j<COLS){
 		if (board[i][j]==user)
 			count++;
+		else if (count>0)
+			break;
 		i++;
 		j++;
 	}
@@ -69,6 +75,8 @@ function checkDiagonalSE(row,col,user){
 	while(i>=0 && j>=0){
 		if (board[i][j]==user)
 			count++;
+		else if (count>0)
+			break;
 		i--;
 		j--;
 	}
@@ -83,6 +91,8 @@ function checkDiagonalSW(row,col,user){
 	while(i>=0 && j<COLS){
 		if (board[i][j]==user)
 			count++;
+		else if (count>0)
+			break;
 		i--;
 		j++;
 	}
@@ -97,6 +107,8 @@ function checkDiagonalNE(row,col,user){
 	while(i<ROWS && j>=0){
 		if (board[i][j]==user)
 			count++;
+		else if (count>0)
+			break;
 		i++;
 		j--;
 	}

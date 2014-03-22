@@ -33,11 +33,12 @@ $(function(){
 		var url = "<?= base_url() ?>board/getMsg";
 		$.getJSON(url, function (data,text,jqXHR){
 			if (data && data.status=='success') {
-				var conversation = $('[name=conversation]').val();
+				var conversation = $("[name='conversation']").val();
 				var msg = data.message;
 				if (msg.length > 0)
-					$('[name=conversation]').val(conversation + "\n" + otherUser + ": " + msg);
+					$("[name='conversation']").val(conversation + "\n" + otherUser + ": " + msg);
 			}
+			$("[name='conversation']").scrollTop($("[name='conversation']")[0].scrollHeight);
 		});
 	});
 	// every 500 ms, check whose turn it is and reprint the board if necessary
@@ -49,6 +50,9 @@ $(function(){
 				// set the turn
 				var turn = data.turn;
 				$('#turn').html(turn);
+				// if it's the opponent's turn, set the font colour to red
+				if (turn==otherUser)
+					$('#turn').css('color','red');
 				// get the filled cells (JSON string)
 				var filled = JSON.parse(data.filled);
 				// populate the filled cells appropriately
@@ -78,11 +82,18 @@ $(function(){
 		var arguments = $(this).serialize();
 		var url = "<?= base_url() ?>board/postMsg";
 		$.post(url,arguments, function (data,textStatus,jqXHR){
-			var conversation = $('[name=conversation]').val();
+			var conversation = $("[name='conversation']").val();
 			var msg = $('[name=msg]').val();
-			$('[name=conversation]').val(conversation + "\n" + user + ": " + msg);
+			$("[name='conversation']").val(conversation + "\n" + user + ": " + msg);
+			$("input[name='msg']").val('');
 		});
+		$("[name='conversation']").scrollTop($("[name='conversation']")[0].scrollHeight);
 		return false;
+	});
+	// make chat box always scroll to bottom
+	$("[name='conversation']").change(function() {
+		console.log('shit');
+		$("[name='conversation']").scrollTop($("[name='conversation']")[0].scrollHeight);
 	});
 	// event handler for clicking on the game's board
 	$('td').click(function(){
