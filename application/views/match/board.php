@@ -80,9 +80,11 @@ $(function(){
 						$('#win').html("You win");
 					else if (win==otherUser)
 						$('#win').html("You lose");
+					$('#turn').html("");
 				} else if (win=="tie"){
 					$('#turn').stopTime('updater');
 					$('#win').html("Draw");
+					$('#turn').html("");
 				}
 			}
 		});
