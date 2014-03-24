@@ -1,27 +1,23 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<style>
-		input {
-			display: block;
-		}
-	</style>
-	<script src="http://code.jquery.com/jquery-latest.js"></script>
-	<script>
-	function checkPassword() {
-		var p1 = $("#pass1"); 
-		var p2 = $("#pass2");
-		
-		if (p1.val() == p2.val()) {
-			p1.get(0).setCustomValidity("");  // All is well, clear error message
-			return true;
-		}	
-		else {
-			p1.get(0).setCustomValidity("Passwords do not match");
-			return false;
-		}
+<link href="<?echo base_url();?>css/template.css" rel="stylesheet" type="text/css"/>
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+<script>
+function checkPassword() {
+	var p1 = $("#pass1"); 
+	var p2 = $("#pass2");
+	
+	if (p1.val() == p2.val()) {
+		p1.get(0).setCustomValidity("");  // All is well, clear error message
+		return true;
+	}	
+	else {
+		p1.get(0).setCustomValidity("Passwords do not match");
+		return false;
 	}
-	</script>
+}
+</script>
 </head> 
 <body>  
 	<h1>Change Password</h1>
@@ -29,7 +25,6 @@
 	if (isset($errorMsg)) {
 		echo "<p>" . $errorMsg . "</p>";
 	}
-
 	echo form_open('account/updatePassword');
 	echo form_label('Current Password'); 
 	echo form_error('oldPassword');

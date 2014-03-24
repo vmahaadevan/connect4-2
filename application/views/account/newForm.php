@@ -1,11 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<style>
-	input {
-		display: block;
-	}
-</style>
+<link href="<?echo base_url();?>css/template.css" rel="stylesheet" type="text/css"/>
 <script src="http://code.jquery.com/jquery-latest.js"></script>
 <script>
 function checkPassword() {

@@ -1,12 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<style>
-		input {
-			display: block;
-		}
-	</style>
-
+<link href="<?echo base_url();?>css/template.css" rel="stylesheet" type="text/css"/>
 </head> 
 <body>  
 	<h1>Recover Password</h1>

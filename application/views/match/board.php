@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+<link href="<?echo base_url();?>css/template.css" rel="stylesheet" type="text/css"/>
 <link href="<?echo base_url();?>css/board.css" rel="stylesheet" type="text/css"/>
 <script src="http://code.jquery.com/jquery-latest.js"></script>
 <script src="<?= base_url() ?>js/jquery.timers.js"></script>
@@ -38,7 +39,8 @@ $(function(){
 				var conversation = $("[name='conversation']").val();
 				var msg = data.message;
 				if (msg.length > 0) {
-					$("[name='conversation']").val(conversation + "\n" + otherUser + ": " + msg);
+					$("[name='conversation']").val(conversation+"\n"+otherUser+": " +msg);
+					// scroll chat box to the bottom
 					$("[name='conversation']").scrollTop($("[name='conversation']")[0].scrollHeight);
 				}
 			}
@@ -53,9 +55,11 @@ $(function(){
 			if (data && data.status=='success') {
 				// set the turn
 				var turn = data.turn;
-				if (turn==user)
+				// if it's the player's turn, set the font colour to green
+				if (turn==user) {
 					$('#turn').html("You");
-				// if it's the opponent's turn, set the font colour to red
+					$('#turn').css('color','green');
+				}// if it's the opponent's turn, set the font colour to red
 				if (turn==otherUser) {
 					$('#turn').html("Opponent");
 					$('#turn').css('color','red');
@@ -71,21 +75,20 @@ $(function(){
 					else // if it's the opponent's cell
 						$("td[id="+key+"]").html(opponentPiece);
 				}
-				// see if anyone has won the game
+				// see if anyone has won the game or if the game tied
 				var win = data.win;
-				// if so, stop updating the board
-				if (win==user || win==otherUser){ 
+				// if so, stop updating the board and alert the player
+				if (win){ 
 					$('#turn').stopTime('updater');
 					if (win==user)
 						$('#win').html("You win");
 					else if (win==otherUser)
 						$('#win').html("You lose");
+					else if (win=="tie")
+						$('#win').html("Draw");
 					$('#turn').html("");
-				} else if (win=="tie"){
-					$('#turn').stopTime('updater');
-					$('#win').html("Draw");
-					$('#turn').html("");
-				}
+					alert($('#win').html());
+				} 
 			}
 		});
 	});
@@ -96,8 +99,11 @@ $(function(){
 		$.post(url,arguments, function (data,textStatus,jqXHR){
 			var conversation = $("[name='conversation']").val();
 			var msg = $('[name=msg]').val();
-			$("[name='conversation']").val(conversation + "\n" + user + ": " + msg);
+			// make player's username appear green in the chat window
+			$("[name='conversation']").val(conversation+"\n"+user+": "+msg);
+			// clear the input form field
 			$("input[name='msg']").val('');
+			// scroll the chat box to the very bottom
 			$("[name='conversation']").scrollTop($("[name='conversation']")[0].scrollHeight);
 		});
 		return false;
@@ -153,7 +159,7 @@ $(function(){
 <body>  
 <h1>Game Area</h1>
 <div>
-Hello <?= $user->fullName() ?>  <?= anchor('account/logout','(Logout)') ?>  
+Hello <?= $user->fullName() ?>  
 </div>
 <div id='status'> 
 <?php 
@@ -163,7 +169,10 @@ Hello <?= $user->fullName() ?>  <?= anchor('account/logout','(Logout)') ?>
 		echo "Wating on " . $otherUser->login;
 ?>
 </div>
-<p>Current turn: <span id='turn'></span></p>
+<p> You: <img height="20" width="20" src="<?= base_url() ?>images/green.jpg"/>
+Opponent: <img height="20" width="20" src="<?= base_url() ?>images/red.jpg"/>
+</p>
+Current turn: <span id='turn'></span><br>
 <?php
 	echo "<table>\n";
 	echo "<tr><td>";
@@ -185,7 +194,8 @@ Hello <?= $user->fullName() ?>  <?= anchor('account/logout','(Logout)') ?>
 	echo form_submit('Send','Send');
 	echo form_close();
 	echo "</td></tr></table>";
-	echo anchor("arcade", "Back to game lobby");
+	echo anchor("arcade", "Back to game lobby")."<br>";
+	echo anchor('account/logout','Log out');
 ?>
 </body>
 </html>
