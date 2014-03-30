@@ -152,7 +152,7 @@ class Board extends CI_Controller {
  		error:
 			echo json_encode(array('status'=>'failure','message'=>$errormsg));
 	}
-	// Set the game state (turn, which cells are filled)
+	// Set the game state (turn, which cells are filled, anyone win?)
 	function setGameState(){
 		$this->load->model('user_model');
  		$this->load->model('match_model');

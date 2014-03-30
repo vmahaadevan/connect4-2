@@ -61,6 +61,7 @@ class Account extends CI_Controller {
     	$this->load->view('account/newForm');
     }
     // load securimage library and provide a link to views for images
+    // Views will call base_url()/account/securimage
     function securimage(){
     	$this->load->library('securimage/securimage');
 		$img = new Securimage();
@@ -70,6 +71,7 @@ class Account extends CI_Controller {
 	function verifyCaptcha($captcha){
 		$this->load->library('securimage/securimage');
 		$securimage = new Securimage();
+		// set error message if the captcha code is incorrect
 		if ($securimage->check($captcha)==false){
 			$this->form_validation->set_message('verifyCaptcha', 
 				'Verification code does not match the displayed image');
@@ -85,6 +87,7 @@ class Account extends CI_Controller {
     	$this->form_validation->set_rules('first', 'First Name', "required");
     	$this->form_validation->set_rules('last', 'Last Name', "required");
     	$this->form_validation->set_rules('email', 'Email', "required|is_unique[user.email]");
+    	// captcha code securimage
     	$this->form_validation->set_rules('captcha_code','Captcha',"required|callback_verifyCaptcha");
     	
     	if ($this->form_validation->run() == FALSE) {

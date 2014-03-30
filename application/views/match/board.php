@@ -24,7 +24,7 @@ $(function(){
 				}
 				if (data && data.status=='accepted') {
 					status = 'playing';
-					$('#status').html('Playing ' + otherUser);
+					$('#status').html('Your opponent: ' + otherUser);
 					// set current turn to that of the player who started the match
 					var url = "<?= base_url() ?>board/setGameState";
 					$.post(url,'turn='+user);

@@ -72,8 +72,7 @@ class Arcade extends CI_Controller {
 	    $this->db->trans_begin();
 	    
 	    // change status of invitation to ACCEPTED
-	    $this->invite_model->updateStatus($invite->id,Invite::ACCEPTED);
-	    
+	    $this->invite_model->updateStatus($invite->id,Invite::ACCEPTED); 
 	    
 	    // create a match entry
 	    $match = new Match();
